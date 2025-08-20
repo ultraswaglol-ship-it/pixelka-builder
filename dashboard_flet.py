@@ -118,29 +118,29 @@ def main(page: ft.Page):
         threading.Thread(target=update_checker, daemon=True).start()
         
         page.controls.clear()
-        page.add(
-            ft.Row(
+ page.add(
+    ft.Row(
+        [
+            ft.Column([ft.Text("Диалоги:", weight=ft.FontWeight.BOLD), ft.Divider(), chats_list]),
+            ft.VerticalDivider(),
+            ft.Column(
                 [
-                    ft.Column([ft.Text("Диалоги:", weight=ft.FontWeight.BOLD), ft.Divider(), chats_list], width=300),
-                    ft.VerticalDivider(),
-                    ft.Column(
-                        [
-                            chat_title,
-                            messages_view,
-                            ft.Row([response_field, ft.IconButton(ft.Icons.SEND, on_click=send_click, icon_size=30)])
-                        ],
-                        expand=True,
-                    )
+                    chat_title,
+                    messages_view,
+                    ft.Row([response_field, ft.IconButton(ft.Icons.SEND, on_click=send_click, icon_size=30)])
                 ],
                 expand=True,
-                vertical_alignment=ft.CrossAxisAlignment.STRETCH,
             )
-        )
+        ],
+        expand=True,
+    )
+)
         page.update()
         
     # --- Запуск приложения ---
     page.add(ft.Column([progress_ring, status_text], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER))
     page.session.set("initialized", True)
     threading.Thread(target=initialize, daemon=True).start()
+
 
 ft.app(target=main)
