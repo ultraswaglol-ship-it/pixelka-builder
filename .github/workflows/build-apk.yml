@@ -59,7 +59,7 @@ jobs:
             Widget build(BuildContext context) {
               return MaterialApp(
                 home: FletPythonApp(
-                  pythonChannel: PythonChannel(
+                  (pythonChannel: PythonChannel("dashboard_flet"),
                     script: 'dashboard_flet.py',
                   ),
                 ),
