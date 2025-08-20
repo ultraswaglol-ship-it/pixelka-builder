@@ -17,11 +17,11 @@ jobs:
       - name: Install Flet
         run: pip3 install flet
 
-      # 3. Собираем APK с помощью ИДЕАЛЬНОЙ СИСТЕМЫ
+      # 3. Собираем APK (ИСПРАВЛЕНО!)
       - name: Build APK
-        run: flet build apk dashboard_flet.py --build-name 1.0.0 --build-number 1
+        run: flet build apk dashboard_flet.py
 
-      # 4. Загружаем готовый APK, чтобы ты мог его скачать (ИСПРАВЛЕНО!)
+      # 4. Загружаем готовый APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
