@@ -85,15 +85,15 @@ def main(page: ft.Page):
                     if 'update_id' in update:
                         page.session.set("last_update_id", update['update_id'])
                 
-                page.update() # Обновляем UI один раз после обработки всех сообщений
+                page.update()
             
-            time.sleep(3) # Ждем 3 секунды перед следующей проверкой
+            time.sleep(3)
 
     # --- Инициализация ---
     def initialize():
         initial_history = load_all_history_from_db()
         if initial_history is None:
-            status_text.value = "Ошибка: не удалось загрузить историю. Проверьте ключи и имя таблицы в telegram_api.py"
+            status_text.value = "Ошибка: не удалось загрузить историю."
             status_text.color = ft.colors.RED
             progress_ring.visible = False
             page.update()
@@ -114,33 +114,29 @@ def main(page: ft.Page):
         page.session.set("last_update_id", 0)
         page.session.set("selected_chat_id", None)
         
-        # ЗАПУСКАЕМ ФОНОВЫЙ ПОТОК - ЭТО КЛЮЧЕВОЙ МОМЕНТ
         threading.Thread(target=update_checker, daemon=True).start()
         
         page.controls.clear()
- page.add(
-    ft.Row(
-        [
-            ft.Column([ft.Text("Диалоги:", weight=ft.FontWeight.BOLD), ft.Divider(), chats_list]),
-            ft.VerticalDivider(),
-            ft.Column(
+        page.add(
+            ft.Row(
                 [
-                    chat_title,
-                    messages_view,
-                    ft.Row([response_field, ft.IconButton(ft.Icons.SEND, on_click=send_click, icon_size=30)])
+                    ft.Column([ft.Text("Диалоги:", weight=ft.FontWeight.BOLD), ft.Divider(), chats_list], width=300),
+                    ft.VerticalDivider(),
+                    ft.Column(
+                        [
+                            chat_title,
+                            messages_view,
+                            ft.Row([response_field, ft.IconButton(ft.Icons.SEND, on_click=send_click, icon_size=30)])
+                        ],
+                        expand=True,
+                    )
                 ],
                 expand=True,
             )
-        ],
-        expand=True,
-    )
-)
+        )
         page.update()
         
-    # --- Запуск приложения ---
     page.add(ft.Column([progress_ring, status_text], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER))
-    page.session.set("initialized", True)
     threading.Thread(target=initialize, daemon=True).start()
-
 
 ft.app(target=main)
