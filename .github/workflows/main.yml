@@ -21,9 +21,9 @@ jobs:
       - name: Build APK
         run: flet build apk dashboard_flet.py --build-name 1.0.0 --build-number 1
 
-      # 4. Загружаем готовый APK, чтобы ты мог его скачать
+      # 4. Загружаем готовый APK, чтобы ты мог его скачать (ИСПРАВЛЕНО!)
       - name: Upload APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: app-release
           path: build/apk/dashboard_flet-*.apk
