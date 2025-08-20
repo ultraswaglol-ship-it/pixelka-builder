@@ -10,44 +10,77 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Забираем твой код
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
+      # 2. Устанавливаем Flutter (как ты и сделал)
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.22.2"
-          channel: stable
+          channel: 'stable'
 
-      - name: Install system deps
+      # 3. Создаем чистое Flutter-приложение
+      - name: Create Flutter App
+        run: flutter create android_app
+
+      # 4. Копируем твой код внутрь приложения
+      - name: Copy Python files
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libglu1-mesa
+          cp dashboard_flet.py android_app/
+          cp telegram_api.py android_app/
+          echo "requests" > android_app/requirements.txt
+          echo "supabase" >> android_app/requirements.txt
 
+      # 5. Настраиваем зависимости Flutter (как мы делали локально)
+      - name: Configure pubspec.yaml
+        run: |
+          cd android_app
+          flutter pub add flet
+          flutter pub add python_channel
+
+      # 6. Создаем правильный main.dart (как мы делали локально)
+      - name: Create main.dart
+        run: |
+          echo '''
+          import 'package:flet/flet.dart';
+          import 'package:flutter/material.dart';
+          import 'package:python_channel/python_channel.dart';
+
+          void main() async {
+            await Flet.setupDesktop();
+            runApp(const MyApp());
+          }
+
+          class MyApp extends StatelessWidget {
+            const MyApp({super.key});
+
+            @override
+            Widget build(BuildContext context) {
+              return MaterialApp(
+                home: FletPythonApp(
+                  pythonChannel: PythonChannel(
+                    script: 'dashboard_flet.py',
+                  ),
+                ),
+              );
+            }
+          }
+          ''' > android_app/lib/main.dart
+
+      # 7. Устанавливаем Python-зависимости
       - name: Install Python deps
-        run: |
-          python -m pip install --upgrade pip
-          pip install flet
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        run: pip install -r android_app/requirements.txt
 
-      - name: Accept Android Licenses
-        run: yes | flutter doctor --android-licenses
-
-      - name: Flutter doctor
-        run: flutter doctor -v
-
+      # 8. ЗАПУСКАЕМ НАСТОЯЩУЮ СБОРКУ
       - name: Build APK
-        run: flet build apk --module-name dashboard_flet
+        run: |
+          cd android_app
+          flutter build apk
 
+      # 9. Отдаем тебе готовый APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-apk
-          path: |
-            build/apk/*.apk
-            build/**/apk/*.apk
+          path: android_app/build/app/outputs/flutter-apk/app-release.apk
