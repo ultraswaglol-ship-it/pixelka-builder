@@ -1,0 +1,29 @@
+name: Build Flet APK
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Забираем твой код
+      - uses: actions/checkout@v3
+
+      # 2. Устанавливаем Flet
+      - name: Install Flet
+        run: pip3 install flet
+
+      # 3. Собираем APK с помощью ИДЕАЛЬНОЙ СИСТЕМЫ
+      - name: Build APK
+        run: flet build apk dashboard_flet.py --build-name 1.0.0 --build-number 1
+
+      # 4. Загружаем готовый APK, чтобы ты мог его скачать
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release
+          path: build/apk/dashboard_flet-*.apk
