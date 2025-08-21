@@ -4,13 +4,13 @@ from supabase import create_client, Client
 
 # --- ОСНОВНЫЕ НАСТРОЙКИ ---
 # Вставьте сюда ваши реальные данные
-BOT_TOKEN = "8289882641:AAGemZ8pi6FWRUMLaqedBvr4fD6UFqRffKs"
-SUPABASE_URL = "https://xyretyxfwjokxdocliuz.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5cmV0eXhmd2pva3hkb2NsaXV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NzQ5ODQsImV4cCI6MjA2MDI1MDk4NH0.TpfDw-rUvkLJlT1jsQZ9P60bzlsCMgQs3pOKhrIscaI"
+BOT_TOKEN = ""
+SUPABASE_URL = ""
+SUPABASE_KEY = ""
 
 # --- КОНФИГУРАЦИЯ ---
 # Базовый URL для API Telegram
-TELEGRAM_API_URL = f"https://api.telegram.org/bot8289882641:AAGemZ8pi6FWRUMLaqedBvr4fD6UFqRffKs/"
+TELEGRAM_API_URL = f""
 # Инициализация клиента Supabase
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
@@ -111,4 +111,5 @@ if __name__ == "__main__":
     else:
         print("...ОШИБКА при соединении с Supabase. Дальнейшие тесты отменены.")
     
+
     print("\n--- Тестирование завершено ---")
